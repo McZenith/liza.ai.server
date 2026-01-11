@@ -1,1 +1,1 @@
-web: cd src/Liza.Silo/bin/publish && ./Liza.Silo --urls http://*:$PORT
+web: dotnet src/Liza.Silo/bin/publish/Liza.Silo.dll --urls http://*:$PORT
