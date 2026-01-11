@@ -7,6 +7,7 @@ COPY Liza.sln ./
 COPY src/Liza.Core/Liza.Core.csproj src/Liza.Core/
 COPY src/Liza.Infrastructure/Liza.Infrastructure.csproj src/Liza.Infrastructure/
 COPY src/Liza.Orleans/Liza.Orleans.csproj src/Liza.Orleans/
+COPY src/Liza.Api/Liza.Api.csproj src/Liza.Api/
 COPY src/Liza.Silo/Liza.Silo.csproj src/Liza.Silo/
 
 # Restore dependencies
@@ -26,7 +27,8 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Heroku uses PORT env variable
-ENV ASPNETCORE_URLS=http://+:${PORT:-5000}
+ENV ASPNETCORE_ENVIRONMENT=Production
 
 # Start the app
 ENTRYPOINT ["dotnet", "Liza.Silo.dll"]
+

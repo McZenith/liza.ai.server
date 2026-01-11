@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -9,13 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.11" />
+    <PackageReference Include="HotChocolate.Data.MongoDb" Version="15.1.11" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
     <PackageReference Include="Microsoft.Orleans.Clustering.Redis" Version="9.2.1" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="9.2.1" />
+    <PackageReference Include="MongoDB.Driver" Version="3.5.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Liza.Core\Liza.Core.csproj" />
     <ProjectReference Include="..\Liza.Orleans\Liza.Orleans.csproj" />
     <ProjectReference Include="..\Liza.Infrastructure\Liza.Infrastructure.csproj" />
+    <ProjectReference Include="..\Liza.Api\Liza.Api.csproj" />
   </ItemGroup>
 </Project>
+
