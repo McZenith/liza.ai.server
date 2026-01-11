@@ -1,5 +1,6 @@
 using Liza.Infrastructure;
 using Liza.Orleans.Grains;
+using Liza.Silo;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -29,6 +30,9 @@ builder.UseOrleans(siloBuilder =>
 
 // Add infrastructure services (YouTube, Autocomplete, etc.)
 builder.Services.AddLizaInfrastructure(builder.Configuration);
+
+// Add trending warmup worker (runs on startup and daily at 6 AM UTC)
+builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
 

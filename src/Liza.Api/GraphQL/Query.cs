@@ -2,6 +2,7 @@ namespace Liza.Api.GraphQL;
 
 using HotChocolate.Subscriptions;
 using Liza.Core.Models;
+using Liza.Core.Services;
 using Liza.Orleans.Grains.Abstractions;
 
 /// <summary>
@@ -19,6 +20,30 @@ public class Query
     {
         var grain = grainFactory.GetGrain<IResearchOrchestratorGrain>(keyword);
         return await grain.ExecuteAsync();
+    }
+
+    /// <summary>
+    /// Get trending videos from cache (warmed up daily)
+    /// </summary>
+    [GraphQLDescription("Get cached trending videos for a specific region")]
+    public async Task<List<CachedTrendingVideo>> GetTrendingVideos(
+        [GraphQLDescription("Region code (default US)")] string? regionCode,
+        [Service] IGrainFactory grainFactory)
+    {
+        var grain = grainFactory.GetGrain<ITrendingAnalysisGrain>(regionCode ?? "US");
+        return await grain.GetCachedTrendingVideosAsync();
+    }
+
+    /// <summary>
+    /// Get pre-analyzed trending keywords (cached from daily warmup)
+    /// </summary>
+    [GraphQLDescription("Get pre-analyzed trending keywords for the Explore tab")]
+    public async Task<List<TrendingKeywordSummary>> GetTrendingKeywords(
+        [GraphQLDescription("Region code (default US)")] string? regionCode,
+        [Service] IGrainFactory grainFactory)
+    {
+        var grain = grainFactory.GetGrain<ITrendingAnalysisGrain>(regionCode ?? "US");
+        return await grain.GetCachedTrendingKeywordsAsync();
     }
 
     /// <summary>

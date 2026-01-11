@@ -140,3 +140,60 @@ public interface IKeywordAnalysisGrain : IGrainWithStringKey
     IAsyncEnumerable<LongTailAnalyzedResult> StreamLongTailsAsync(int maxVariations);
 }
 
+/// <summary>
+/// Manages trending keyword analysis and caching for the Explore tab
+/// Warmed up daily by the scheduled worker
+/// </summary>
+public interface ITrendingAnalysisGrain : IGrainWithStringKey
+{
+    /// <summary>
+    /// Warm up the cache by fetching trending videos and analyzing extracted keywords.
+    /// Called daily by the scheduled worker at 6 AM UTC.
+    /// </summary>
+    Task WarmupAsync();
+    
+    /// <summary>
+    /// Get the cached trending keywords from the last warmup.
+    /// Returns quickly since data is pre-analyzed.
+    /// </summary>
+    Task<List<TrendingKeywordSummary>> GetCachedTrendingKeywordsAsync();
+    
+    /// <summary>
+    /// Get the cached trending videos from the last warmup.
+    /// Returns quickly since data is pre-cached.
+    /// </summary>
+    Task<List<CachedTrendingVideo>> GetCachedTrendingVideosAsync();
+}
+
+/// <summary>
+/// Cached trending video with essential display fields
+/// </summary>
+[GenerateSerializer]
+public class CachedTrendingVideo
+{
+    [Id(0)] public required string VideoId { get; init; }
+    [Id(1)] public required string Title { get; init; }
+    [Id(2)] public required string ChannelTitle { get; init; }
+    [Id(3)] public long ViewCount { get; init; }
+    [Id(4)] public long LikeCount { get; init; }
+    [Id(5)] public string? ThumbnailMedium { get; init; }
+    [Id(6)] public string? ThumbnailHigh { get; init; }
+    [Id(7)] public DateTime PublishedAt { get; init; }
+}
+
+/// <summary>
+/// Summary of a trending keyword with pre-analyzed metrics
+/// </summary>
+[GenerateSerializer]
+public class TrendingKeywordSummary
+{
+    [Id(0)] public required string Keyword { get; init; }
+    [Id(1)] public required string Grade { get; init; }
+    [Id(2)] public int Opportunity { get; init; }
+    [Id(3)] public int Difficulty { get; init; }
+    [Id(4)] public long SearchVolume { get; init; }
+    [Id(5)] public int TrendingVideoCount { get; init; }
+    [Id(6)] public string? TopVideoTitle { get; init; }
+    [Id(7)] public string? TopVideoThumbnail { get; init; }
+    [Id(8)] public DateTime AnalyzedAt { get; init; }
+}
