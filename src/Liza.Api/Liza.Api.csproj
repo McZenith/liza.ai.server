@@ -20,4 +20,11 @@
     <ProjectReference Include="..\Liza.Infrastructure\Liza.Infrastructure.csproj" />
   </ItemGroup>
 
+  <!-- Exclude appsettings when referenced as library by Liza.Silo -->
+  <ItemGroup>
+    <Content Update="appsettings.json" CopyToPublishDirectory="Never" />
+    <Content Update="appsettings.*.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
 </Project>
+
